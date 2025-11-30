@@ -50,18 +50,26 @@
       }
       body {
         margin: 0;
-        padding: 0;
+        padding: 48px 0 64px;
         font-family: "Helvetica Neue", Arial, sans-serif;
         background: var(--body-bg);
         color: var(--text-primary);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
         gap: 18px;
-        padding: 48px 24px 64px;
         position: relative;
         transition: background 0.2s ease, color 0.2s ease;
+      }
+      .example {
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .example + .example {
+        margin-top: 12px;
       }
       h1 {
         margin: 0 0 12px;
@@ -84,7 +92,7 @@
         line-height: 1.5;
         overflow-x: auto;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-        width: min(900px, 90vw);
+        width: 100%;
       }
       pre.code-block code {
         color: inherit;
@@ -107,7 +115,7 @@
       }
       earth-wedge {
         display: block;
-        width: min(900px, 90vw);
+        width: 100%;
         aspect-ratio: 16 / 9;
         border-radius: 12px;
         overflow: hidden;
@@ -154,6 +162,23 @@
       :root[data-resolved-theme="dark"] .theme-toggle button.active {
         background: rgba(255, 255, 255, 0.1);
       }
+      @media (min-width: 700px) {
+        body {
+          gap: 24px;
+        }
+        .example {
+          flex-direction: row-reverse;
+          align-items: center;
+          gap: 16px;
+        }
+        .example pre.code-block {
+          flex: 0 0 360px;
+        }
+        .example earth-wedge {
+          flex: 1 1 auto;
+          width: auto;
+        }
+      }
     </style>
   </head>
   <body>
@@ -162,7 +187,8 @@
       <button type="button" data-theme="system" class="active">System</button>
       <button type="button" data-theme="dark">Dark</button>
     </div>
-    <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
+    <div class="example">
+      <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
   <span class="code-attr">outline</span>=<span class="code-value">'[
     {"lat": 48.8589, "lon": 2.2936},
     {"lat": 48.8592, "lon": 2.2951},
@@ -172,21 +198,24 @@
     {"lat": 48.8583, "lon": 2.2934}
   ]'</span><span class="code-tag">&gt;</span>
 <span class="code-tag">&lt;/earth-wedge&gt;</span></code></pre>
-    <earth-wedge
-      outline='[
-        {"lat": 48.8589, "lon": 2.2936},
-        {"lat": 48.8592, "lon": 2.2951},
-        {"lat": 48.8586, "lon": 2.2960},
-        {"lat": 48.8579, "lon": 2.2957},
-        {"lat": 48.8577, "lon": 2.2943},
-        {"lat": 48.8583, "lon": 2.2934}
-      ]'
-    ></earth-wedge>
-    <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
+      <earth-wedge
+        outline='[
+          {"lat": 48.8589, "lon": 2.2936},
+          {"lat": 48.8592, "lon": 2.2951},
+          {"lat": 48.8586, "lon": 2.2960},
+          {"lat": 48.8579, "lon": 2.2957},
+          {"lat": 48.8577, "lon": 2.2943},
+          {"lat": 48.8583, "lon": 2.2934}
+        ]'
+      ></earth-wedge>
+    </div>
+    <div class="example">
+      <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
   <span class="code-attr">way</span>=<span class="code-value">"32965412"</span>
 <span class="code-tag">&gt;</span>
 <span class="code-tag">&lt;/earth-wedge&gt;</span></code></pre>
-    <earth-wedge way="32965412"></earth-wedge>
+      <earth-wedge way="32965412"></earth-wedge>
+    </div>
 
     <script type="module">
       import './index.ts';
