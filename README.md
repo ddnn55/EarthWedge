@@ -15,8 +15,45 @@
   ]'
 ></earth-wedge>
 
+<earth-wedge way="32965412"></earth-wedge> <!-- fetches an OSM way -->
+
 <script type="module">
-  import './EarthWedge/index.ts';
+  import './index.ts';
+  // register the custom element once; every <earth-wedge> on the page shares the WebGL renderer
+</script>
+```
+
+### Grid example (as used in `demo.html`)
+
+```html
+<p>&lt;earth-wedge&gt; uses a single webgl element for the entire page, so you can render a lot of buildings performantly.</p>
+<input type="range" id="capitol-grid-slider" min="2" max="7" step="1" value="5" />
+<div class="capitol-grid" data-capitol-grid></div>
+
+<script type="module">
+  import './index.ts';
+  import capitols from './us_capitol_outlines.json';
+
+  const grid = document.querySelector('[data-capitol-grid]');
+  const slider = document.querySelector('#capitol-grid-slider');
+  const updateColumns = (value) =>
+    grid?.style.setProperty('--capitol-columns', Math.max(1, Number(value) || 5));
+  slider?.addEventListener('input', (event) => updateColumns(event.target.value));
+  updateColumns(slider?.value ?? 5);
+
+  capitols.ways
+    .slice()
+    .sort((a, b) => (a.state || '').localeCompare(b.state || ''))
+    .forEach((way) => {
+      const card = document.createElement('div');
+      const wedge = document.createElement('earth-wedge');
+      const name = way.state || way.description || 'State Capitol';
+      wedge.setAttribute('name', name);
+      if (way.outline) wedge.setAttribute('outline', JSON.stringify(way.outline));
+      else if (way.wayId) wedge.setAttribute('way', String(way.wayId));
+      card.appendChild(wedge);
+      grid?.appendChild(card);
+    });
 </script>
 ```
 
