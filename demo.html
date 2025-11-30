@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EarthWedge Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background: radial-gradient(circle at 20% 20%, #0c2745, #050f1d 60%);
+        color: #e8edf2;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .demo-shell {
+        width: min(900px, 90vw);
+        padding: 32px;
+        background: rgba(12, 27, 48, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(8px);
+        position: relative;
+        overflow: hidden;
+      }
+      .demo-shell::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 35%);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 28px;
+        letter-spacing: 0.03em;
+      }
+      p {
+        margin: 0 0 24px;
+        color: #b4c0d0;
+      }
+      earth-wedge {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-shell">
+      <h1>EarthWedge – Statue of Liberty</h1>
+      <p>
+        A single renderer slices itself into multiple viewports. Here we only use one
+        <code>&lt;earth-wedge&gt;</code>, outlined around Liberty Island.
+      </p>
+      <earth-wedge
+        id="demo-wedge"
+        name="Statue of Liberty"
+        outline='[
+          {"lat": 40.6904, "lon": -74.0471},
+          {"lat": 40.6906, "lon": -74.0451},
+          {"lat": 40.6890, "lon": -74.0438},
+          {"lat": 40.6882, "lon": -74.0456},
+          {"lat": 40.6884, "lon": -74.0474}
+        ]'
+      ></earth-wedge>
+      <p style="margin-top: 18px; color: #9fb4c8;">
+        The same renderer handles OSM ways. Below we pass an OSM way id (32965412) and let the element
+        fetch and convex-hull the outline before rendering.
+      </p>
+      <earth-wedge
+        id="demo-wedge-way"
+        name="OSM Way 32965412"
+        way="32965412"
+        style="margin-top: 12px;"
+      ></earth-wedge>
+    </div>
+
+    <script type="module">
+      import './index.ts';
+    </script>
+  </body>
+</html>
