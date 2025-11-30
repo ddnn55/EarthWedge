@@ -56,28 +56,12 @@
         color: var(--text-primary);
         min-height: 100vh;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
+        gap: 18px;
+        padding: 48px 24px 64px;
         position: relative;
         transition: background 0.2s ease, color 0.2s ease;
-      }
-      .demo-shell {
-        width: min(900px, 90vw);
-        padding: 32px;
-        background: var(--shell-bg);
-        border: 1px solid var(--shell-border);
-        border-radius: 18px;
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(8px);
-        position: relative;
-        overflow: hidden;
-      }
-      .demo-shell::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: linear-gradient(135deg, var(--shell-highlight), transparent 35%);
       }
       h1 {
         margin: 0 0 12px;
@@ -100,6 +84,7 @@
         line-height: 1.5;
         overflow-x: auto;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+        width: min(900px, 90vw);
       }
       pre.code-block code {
         color: inherit;
@@ -122,12 +107,12 @@
       }
       earth-wedge {
         display: block;
-        width: 100%;
+        width: min(900px, 90vw);
         aspect-ratio: 16 / 9;
         border-radius: 12px;
         overflow: hidden;
       }
-      .demo-shell earth-wedge + earth-wedge {
+      earth-wedge + earth-wedge {
         margin-top: 12px;
       }
       .theme-toggle {
@@ -177,8 +162,7 @@
       <button type="button" data-theme="system" class="active">System</button>
       <button type="button" data-theme="dark">Dark</button>
     </div>
-    <div class="demo-shell">
-      <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
+    <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
   <span class="code-attr">outline</span>=<span class="code-value">'[
     {"lat": 48.8589, "lon": 2.2936},
     {"lat": 48.8592, "lon": 2.2951},
@@ -188,22 +172,21 @@
     {"lat": 48.8583, "lon": 2.2934}
   ]'</span><span class="code-tag">&gt;</span>
 <span class="code-tag">&lt;/earth-wedge&gt;</span></code></pre>
-      <earth-wedge
-        outline='[
-          {"lat": 48.8589, "lon": 2.2936},
-          {"lat": 48.8592, "lon": 2.2951},
-          {"lat": 48.8586, "lon": 2.2960},
-          {"lat": 48.8579, "lon": 2.2957},
-          {"lat": 48.8577, "lon": 2.2943},
-          {"lat": 48.8583, "lon": 2.2934}
-        ]'
-      ></earth-wedge>
-      <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
+    <earth-wedge
+      outline='[
+        {"lat": 48.8589, "lon": 2.2936},
+        {"lat": 48.8592, "lon": 2.2951},
+        {"lat": 48.8586, "lon": 2.2960},
+        {"lat": 48.8579, "lon": 2.2957},
+        {"lat": 48.8577, "lon": 2.2943},
+        {"lat": 48.8583, "lon": 2.2934}
+      ]'
+    ></earth-wedge>
+    <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
   <span class="code-attr">way</span>=<span class="code-value">"32965412"</span>
 <span class="code-tag">&gt;</span>
 <span class="code-tag">&lt;/earth-wedge&gt;</span></code></pre>
-      <earth-wedge way="32965412"></earth-wedge>
-    </div>
+    <earth-wedge way="32965412"></earth-wedge>
 
     <script type="module">
       import './index.ts';
