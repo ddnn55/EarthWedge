@@ -189,6 +189,67 @@
           width: auto;
         }
       }
+      .capitols-section {
+        padding: 0 20px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .capitols-header {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-width: 860px;
+      }
+      .capitols-description {
+        margin: 0;
+        font-size: 15px;
+        color: var(--text-secondary);
+      }
+      .capitol-controls {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border: 1px solid var(--shell-border);
+        border-radius: 10px;
+        background: var(--shell-bg);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        width: fit-content;
+      }
+      .capitol-controls label {
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 600;
+      }
+      .capitol-controls input[type="range"] {
+        accent-color: #1f6feb;
+      }
+      .capitol-grid {
+        --capitol-columns: 5;
+        display: grid;
+        grid-template-columns: repeat(var(--capitol-columns), minmax(0, 1fr));
+        gap: 14px;
+        width: 100%;
+      }
+      @media (max-width: 700px) {
+        .capitol-grid {
+          --capitol-columns: 2;
+        }
+      }
+      .capitol-card {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .capitol-card earth-wedge {
+        aspect-ratio: 1 / 1;
+      }
+      .capitol-name {
+        text-align: center;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
     </style>
   </head>
   <body>
@@ -229,9 +290,20 @@
 <earth-wedge way="32965412" />
       </div>
     </div>
+    <section class="capitols-section">
+      <div class="capitols-header">
+        <p class="capitols-description">&lt;earth-wedge&gt; uses a single webgl element for the entire page, so you can render a lot of buildings performantly.</p>
+        <div class="capitol-controls">
+          <label for="capitol-grid-slider">Tile size</label>
+          <input id="capitol-grid-slider" data-capitol-slider type="range" min="2" max="7" step="1" value="5" />
+        </div>
+      </div>
+      <div class="capitol-grid" data-capitol-grid></div>
+    </section>
 
     <script type="module">
       import './index.ts';
+      import capitols from './us_capitol_outlines.json';
 
       const root = document.documentElement;
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -264,6 +336,57 @@
       toggleButtons.forEach((btn) =>
         btn.addEventListener('click', () => setTheme(btn.dataset.theme))
       );
+
+      const grid = document.querySelector('[data-capitol-grid]');
+      const slider = document.querySelector('[data-capitol-slider]');
+
+      const updateColumns = (value) => {
+        if (!grid) return;
+        const columns = Math.max(1, Math.min(10, Number(value) || 5));
+        grid.style.setProperty('--capitol-columns', columns);
+      };
+
+      if (slider) {
+        slider.addEventListener('input', (event) => {
+          updateColumns((event.target || slider).value);
+        });
+        updateColumns(slider.value);
+      } else {
+        updateColumns(5);
+      }
+
+      const capitolWays = Array.isArray(capitols?.ways) ? capitols.ways : [];
+      if (grid && capitolWays.length) {
+        const fragment = document.createDocumentFragment();
+
+        capitolWays
+          .slice()
+          .sort((a, b) => (a.state || '').localeCompare(b.state || ''))
+          .forEach((way) => {
+            const card = document.createElement('div');
+            card.className = 'capitol-card';
+
+            const wedge = document.createElement('earth-wedge');
+            wedge.className = 'capitol-viewport';
+            const name = way.state || way.description || 'State Capitol';
+            wedge.setAttribute('name', name);
+            if (way.outline) {
+              wedge.setAttribute('outline', JSON.stringify(way.outline));
+            } else if (way.wayId) {
+              wedge.setAttribute('way', String(way.wayId));
+            }
+            card.appendChild(wedge);
+
+            const label = document.createElement('div');
+            label.className = 'capitol-name';
+            label.textContent = name;
+            card.appendChild(label);
+
+            fragment.appendChild(card);
+          });
+
+        grid.appendChild(fragment);
+      }
     </script>
   </body>
 </html>
