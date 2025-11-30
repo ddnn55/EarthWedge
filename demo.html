@@ -16,6 +16,10 @@
         --shell-border: #e1e8f0;
         --shell-highlight: rgba(0, 0, 0, 0.04);
         --shadow: 0 24px 70px rgba(0, 0, 0, 0.08);
+        --code-bg: #f5f7fb;
+        --code-border: #d9e3f0;
+        --code-text: #0d1b2a;
+        --code-accent: #1f6feb;
         color-scheme: light;
       }
       :root[data-resolved-theme="dark"] {
@@ -26,6 +30,10 @@
         --shell-border: rgba(255, 255, 255, 0.08);
         --shell-highlight: rgba(255, 255, 255, 0.06);
         --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        --code-bg: #0b1728;
+        --code-border: #1c2b3c;
+        --code-text: #e8edf2;
+        --code-accent: #7cc2ff;
         color-scheme: dark;
       }
       @media (prefers-color-scheme: dark) {
@@ -80,12 +88,47 @@
         margin: 0 0 24px;
         color: var(--text-secondary);
       }
+      pre.code-block {
+        margin: 12px 0 24px;
+        padding: 14px 16px;
+        background: var(--code-bg);
+        border: 1px solid var(--code-border);
+        border-radius: 12px;
+        color: var(--code-text);
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        overflow-x: auto;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+      }
+      pre.code-block code {
+        color: inherit;
+        white-space: pre;
+      }
+      .code-tag {
+        color: var(--code-accent);
+      }
+      .code-attr {
+        color: #d97706;
+      }
+      :root[data-resolved-theme="dark"] .code-attr {
+        color: #fbbf24;
+      }
+      .code-value {
+        color: #047857;
+      }
+      :root[data-resolved-theme="dark"] .code-value {
+        color: #34d399;
+      }
       earth-wedge {
         display: block;
         width: 100%;
         aspect-ratio: 16 / 9;
         border-radius: 12px;
         overflow: hidden;
+      }
+      .demo-shell earth-wedge + earth-wedge {
+        margin-top: 12px;
       }
       .theme-toggle {
         position: absolute;
@@ -135,32 +178,31 @@
       <button type="button" data-theme="dark">Dark</button>
     </div>
     <div class="demo-shell">
-      <h1>EarthWedge – Statue of Liberty</h1>
-      <p>
-        A single renderer slices itself into multiple viewports. Here we only use one
-        <code>&lt;earth-wedge&gt;</code>, outlined around Liberty Island.
-      </p>
+      <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
+  <span class="code-attr">outline</span>=<span class="code-value">'[
+    {"lat": 48.8589, "lon": 2.2936},
+    {"lat": 48.8592, "lon": 2.2951},
+    {"lat": 48.8586, "lon": 2.2960},
+    {"lat": 48.8579, "lon": 2.2957},
+    {"lat": 48.8577, "lon": 2.2943},
+    {"lat": 48.8583, "lon": 2.2934}
+  ]'</span><span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;/earth-wedge&gt;</span></code></pre>
       <earth-wedge
-        id="demo-wedge"
-        name="Statue of Liberty"
         outline='[
-          {"lat": 40.6904, "lon": -74.0471},
-          {"lat": 40.6906, "lon": -74.0451},
-          {"lat": 40.6890, "lon": -74.0438},
-          {"lat": 40.6882, "lon": -74.0456},
-          {"lat": 40.6884, "lon": -74.0474}
+          {"lat": 48.8589, "lon": 2.2936},
+          {"lat": 48.8592, "lon": 2.2951},
+          {"lat": 48.8586, "lon": 2.2960},
+          {"lat": 48.8579, "lon": 2.2957},
+          {"lat": 48.8577, "lon": 2.2943},
+          {"lat": 48.8583, "lon": 2.2934}
         ]'
       ></earth-wedge>
-      <p style="margin-top: 18px; color: var(--text-secondary);">
-        The same renderer handles OSM ways. Below we pass an OSM way id (32965412) and let the element
-        fetch and convex-hull the outline before rendering.
-      </p>
-      <earth-wedge
-        id="demo-wedge-way"
-        name="OSM Way 32965412"
-        way="32965412"
-        style="margin-top: 12px;"
-      ></earth-wedge>
+      <pre class="code-block"><code><span class="code-tag">&lt;earth-wedge</span>
+  <span class="code-attr">way</span>=<span class="code-value">"32965412"</span>
+<span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;/earth-wedge&gt;</span></code></pre>
+      <earth-wedge way="32965412"></earth-wedge>
     </div>
 
     <script type="module">
