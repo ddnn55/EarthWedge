@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="system" data-resolved-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,24 +8,58 @@
       * {
         box-sizing: border-box;
       }
+      :root {
+        --body-bg: #ffffff;
+        --text-primary: #0d1b2a;
+        --text-secondary: #445469;
+        --shell-bg: rgba(255, 255, 255, 0.9);
+        --shell-border: #e1e8f0;
+        --shell-highlight: rgba(0, 0, 0, 0.04);
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.08);
+        color-scheme: light;
+      }
+      :root[data-resolved-theme="dark"] {
+        --body-bg: #050f1d;
+        --text-primary: #e8edf2;
+        --text-secondary: #b4c0d0;
+        --shell-bg: rgba(12, 27, 48, 0.75);
+        --shell-border: rgba(255, 255, 255, 0.08);
+        --shell-highlight: rgba(255, 255, 255, 0.06);
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root[data-theme="system"] {
+          --body-bg: #050f1d;
+          --text-primary: #e8edf2;
+          --text-secondary: #b4c0d0;
+          --shell-bg: rgba(12, 27, 48, 0.75);
+          --shell-border: rgba(255, 255, 255, 0.08);
+          --shell-highlight: rgba(255, 255, 255, 0.06);
+          --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+          color-scheme: dark;
+        }
+      }
       body {
         margin: 0;
         padding: 0;
         font-family: "Helvetica Neue", Arial, sans-serif;
-        background: radial-gradient(circle at 20% 20%, #0c2745, #050f1d 60%);
-        color: #e8edf2;
+        background: var(--body-bg);
+        color: var(--text-primary);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+        transition: background 0.2s ease, color 0.2s ease;
       }
       .demo-shell {
         width: min(900px, 90vw);
         padding: 32px;
-        background: rgba(12, 27, 48, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--shell-bg);
+        border: 1px solid var(--shell-border);
         border-radius: 18px;
-        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        box-shadow: var(--shadow);
         backdrop-filter: blur(8px);
         position: relative;
         overflow: hidden;
@@ -35,7 +69,7 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 35%);
+        background: linear-gradient(135deg, var(--shell-highlight), transparent 35%);
       }
       h1 {
         margin: 0 0 12px;
@@ -44,7 +78,7 @@
       }
       p {
         margin: 0 0 24px;
-        color: #b4c0d0;
+        color: var(--text-secondary);
       }
       earth-wedge {
         display: block;
@@ -53,9 +87,53 @@
         border-radius: 12px;
         overflow: hidden;
       }
+      .theme-toggle {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px;
+        background: var(--shell-bg);
+        border: 1px solid var(--shell-border);
+        border-radius: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        z-index: 2;
+      }
+      .theme-toggle button {
+        border: none;
+        background: transparent;
+        color: var(--text-secondary);
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+      .theme-toggle button:hover {
+        color: var(--text-primary);
+        background: rgba(0, 0, 0, 0.04);
+      }
+      :root[data-resolved-theme="dark"] .theme-toggle button:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .theme-toggle button.active {
+        color: var(--text-primary);
+        background: rgba(0, 0, 0, 0.08);
+      }
+      :root[data-resolved-theme="dark"] .theme-toggle button.active {
+        background: rgba(255, 255, 255, 0.1);
+      }
     </style>
   </head>
   <body>
+    <div class="theme-toggle" data-theme-toggle>
+      <button type="button" data-theme="light">Light</button>
+      <button type="button" data-theme="system" class="active">System</button>
+      <button type="button" data-theme="dark">Dark</button>
+    </div>
     <div class="demo-shell">
       <h1>EarthWedge – Statue of Liberty</h1>
       <p>
@@ -73,7 +151,7 @@
           {"lat": 40.6884, "lon": -74.0474}
         ]'
       ></earth-wedge>
-      <p style="margin-top: 18px; color: #9fb4c8;">
+      <p style="margin-top: 18px; color: var(--text-secondary);">
         The same renderer handles OSM ways. Below we pass an OSM way id (32965412) and let the element
         fetch and convex-hull the outline before rendering.
       </p>
@@ -87,6 +165,38 @@
 
     <script type="module">
       import './index.ts';
+
+      const root = document.documentElement;
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      const toggleButtons = document.querySelectorAll('[data-theme-toggle] button');
+      const storedTheme = localStorage.getItem('ew-theme') || 'system';
+
+      const resolveTheme = (choice) =>
+        choice === 'system' ? (prefersDark.matches ? 'dark' : 'light') : choice;
+
+      const applyResolvedTheme = (choice) => {
+        const resolved = resolveTheme(choice);
+        root.setAttribute('data-resolved-theme', resolved);
+      };
+
+      const setTheme = (choice) => {
+        root.setAttribute('data-theme', choice);
+        localStorage.setItem('ew-theme', choice);
+        toggleButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.theme === choice));
+        applyResolvedTheme(choice);
+      };
+
+      setTheme(storedTheme);
+
+      prefersDark.addEventListener('change', () => {
+        if (root.getAttribute('data-theme') === 'system') {
+          applyResolvedTheme('system');
+        }
+      });
+
+      toggleButtons.forEach((btn) =>
+        btn.addEventListener('click', () => setTheme(btn.dataset.theme))
+      );
     </script>
   </body>
 </html>
